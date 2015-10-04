@@ -6,6 +6,7 @@ public class TemperatureSeriesAnalysis {
 
     private static final int TEMP_SERIES_ARRAY_CAPACITY_DEFAULT = 10;
     private static final double ABSOLUTE_MINIMUM_TEMP           = -273;
+    private static final double EPSILON                         = 0.00001;
 
     private double[] temperatureSeries     = null;
     private int temperatureSeriesArrayCapacity;
@@ -114,9 +115,9 @@ public class TemperatureSeriesAnalysis {
                 tempClosestToVal              = temperatureSeries[i];
             }
             
-            if ((Double.compare(absDiffCurrTempAndVal, 
-                                absDiffTempClosestToValAndVal) == 0)
-                && (Double.compare(temperatureSeries[i], 0.0) > 0)) {
+            if ((Math.abs(absDiffCurrTempAndVal
+                                -absDiffTempClosestToValAndVal) < EPSILON)
+                && (temperatureSeries[i] > -EPSILON)) {
                 absDiffTempClosestToValAndVal = absDiffCurrTempAndVal;
                 tempClosestToVal              = temperatureSeries[i];
             }
@@ -135,8 +136,8 @@ public class TemperatureSeriesAnalysis {
         double[] tempsLessThenVal = new double[temperatureSeriesArraySize];
         
         for (int i = 0; i < temperatureSeriesArraySize; i++) {
-            if (((temperatureSeries[i] < tempValue) != searchGreater)
-                && (Double.compare(temperatureSeries[i], tempValue) != 0)) {
+            if (((temperatureSeries[i] - tempValue < EPSILON) != searchGreater)
+                && !(Math.abs(temperatureSeries[i] - tempValue) < EPSILON)) {
                 tempsLessThenVal[foundTempsNumber++] = temperatureSeries[i];
             }
         }
@@ -157,62 +158,12 @@ public class TemperatureSeriesAnalysis {
         //if temperatureSeries is empty then
         //findTempsLessOrGreaterThen() will throw IllegalArgumentException;
         return findTempsLessOrGreaterThen(tempValue, false);
-        /*
-        if (temperatureSeriesArraySize == 0) {
-            throw new IllegalArgumentException();
-        }
-        
-        int foundTempsNumber      = 0;
-        double[] tempsLessThenVal = new double[temperatureSeriesArraySize];
-        
-        for (int i = 0; i < temperatureSeriesArraySize; i++) {
-            if (temperatureSeries[i] < tempValue) {
-                tempsLessThenVal[foundTempsNumber++] = temperatureSeries[i];
-            }
-        }
-        
-        if (foundTempsNumber == 0) {
-            return new double[0];
-        }
-        
-        double[] result = new double[foundTempsNumber];
-        for (int i = 0; i < foundTempsNumber; i++) {
-            result[i] = tempsLessThenVal[i];
-        }
-        
-        return result;
-        */
     }
     
     public double[] findTempsGreaterThen(double tempValue) {
         //if temperatureSeries is empty then
         //findTempsLessOrGreaterThen() will throw IllegalArgumentException;
         return findTempsLessOrGreaterThen(tempValue, true);
-        /*
-        if (temperatureSeriesArraySize == 0) {
-            throw new IllegalArgumentException();
-        }
-        
-        int foundTempsNumber      = 0;
-        double[] tempsGreaterThenVal = new double[temperatureSeriesArraySize];
-        
-        for (int i = 0; i < temperatureSeriesArraySize; i++) {
-            if (temperatureSeries[i] > tempValue) {
-                tempsGreaterThenVal[foundTempsNumber++] = temperatureSeries[i];
-            }
-        }
-        
-        if (foundTempsNumber == 0) {
-            return new double[0];
-        }
-        
-        double[] result = new double[foundTempsNumber];
-        for (int i = 0; i < foundTempsNumber; i++) {
-            result[i] = tempsGreaterThenVal[i];
-        }
-        
-        return result;
-        */
     }
     
     public TempSummaryStatistics summaryStatistics() {
