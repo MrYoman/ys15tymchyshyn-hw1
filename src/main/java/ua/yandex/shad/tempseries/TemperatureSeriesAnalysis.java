@@ -115,9 +115,9 @@ public class TemperatureSeriesAnalysis {
                 tempClosestToVal              = temperatureSeries[i];
             }
             
-            if ((Math.abs(absDiffCurrTempAndVal
-                                -absDiffTempClosestToValAndVal) < EPSILON)
-                && (temperatureSeries[i] > -EPSILON)) {
+            if (Math.abs(absDiffCurrTempAndVal
+                                -absDiffTempClosestToValAndVal) < EPSILON
+                && temperatureSeries[i] > -EPSILON) {
                 absDiffTempClosestToValAndVal = absDiffCurrTempAndVal;
                 tempClosestToVal              = temperatureSeries[i];
             }
@@ -136,8 +136,8 @@ public class TemperatureSeriesAnalysis {
         double[] tempsLessThenVal = new double[temperatureSeriesArraySize];
         
         for (int i = 0; i < temperatureSeriesArraySize; i++) {
-            if (((temperatureSeries[i] - tempValue < EPSILON) != searchGreater)
-                && !(Math.abs(temperatureSeries[i] - tempValue) < EPSILON)) {
+            if (temperatureSeries[i] - tempValue < EPSILON != searchGreater
+                && Math.abs(temperatureSeries[i] - tempValue) >= EPSILON) {
                 tempsLessThenVal[foundTempsNumber++] = temperatureSeries[i];
             }
         }
