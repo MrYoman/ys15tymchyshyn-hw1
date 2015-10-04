@@ -4,25 +4,25 @@ import java.util.InputMismatchException;
 
 public class TemperatureSeriesAnalysis {    
 
-    private static final int TemperatureSeriesArrayCapacityDefault = 10;
-    private static final double AbsoluteMinimumTemperature         = -273;
+    private static final int TEMP_SERIES_ARRAY_CAPACITY_DEFAULT = 10;
+    private static final double ABSOLUTE_MINIMUM_TEMP           = -273;
 
     private double[] temperatureSeries     = null;
     private int temperatureSeriesArrayCapacity;
     private int temperatureSeriesArraySize = 0;
 
     public TemperatureSeriesAnalysis() {
-        temperatureSeriesArrayCapacity = TemperatureSeriesArrayCapacityDefault;
+        temperatureSeriesArrayCapacity = TEMP_SERIES_ARRAY_CAPACITY_DEFAULT;
         temperatureSeries          = new double[temperatureSeriesArrayCapacity];
     }
     
     public TemperatureSeriesAnalysis(double[] temperatureSeries) {
         temperatureSeriesArraySize     = temperatureSeries.length;
         temperatureSeriesArrayCapacity = temperatureSeriesArraySize
-                                       + TemperatureSeriesArrayCapacityDefault;
+                                       + TEMP_SERIES_ARRAY_CAPACITY_DEFAULT;
         this.temperatureSeries = new double[temperatureSeriesArrayCapacity];
         for (int i = 0; i < temperatureSeriesArraySize; i++) {
-            if (temperatureSeries[i] < AbsoluteMinimumTemperature) {
+            if (temperatureSeries[i] < ABSOLUTE_MINIMUM_TEMP) {
                 throw new InputMismatchException();
             }
             this.temperatureSeries[i] = temperatureSeries[i];
@@ -44,7 +44,7 @@ public class TemperatureSeriesAnalysis {
     
     public double deviation() {
         //if temperatureSeries is empty then
-        //this.average () will throw IllegalArgumentException;
+        //this.average() will throw IllegalArgumentException;
         double averageTemperature = this.average();
         
         double sumOfSquaresOfDeviationsFromAverage = 0;
@@ -89,7 +89,7 @@ public class TemperatureSeriesAnalysis {
     
     public double findTempClosestToZero() {
         //if temperatureSeries is empty then
-        //findTempClosestToValue () will throw IllegalArgumentException;
+        //findTempClosestToValue() will throw IllegalArgumentException;
         return findTempClosestToValue(0.0);
     }
     
@@ -101,7 +101,7 @@ public class TemperatureSeriesAnalysis {
         double tempClosestToVal              = temperatureSeries[0];
         double absDiffTempClosestToValAndVal = tempClosestToVal;
         if (tempClosestToVal < 0) {
-            absDiffTempClosestToValAndVal = - tempClosestToVal;
+            absDiffTempClosestToValAndVal = -tempClosestToVal;
         }
         for (int i = 1; i < temperatureSeriesArraySize; i++) {
             double absDiffCurrTempAndVal = temperatureSeries[i] - tempValue;
@@ -114,17 +114,50 @@ public class TemperatureSeriesAnalysis {
                 tempClosestToVal              = temperatureSeries[i];
             }
             
-            if ((absDiffCurrTempAndVal == absDiffTempClosestToValAndVal)
-                && (temperatureSeries[i] > 0)) {
+            if ((Double.compare(absDiffCurrTempAndVal, 
+                                absDiffTempClosestToValAndVal) == 0)
+                && (Double.compare(temperatureSeries[i], 0.0) > 0)) {
                 absDiffTempClosestToValAndVal = absDiffCurrTempAndVal;
                 tempClosestToVal              = temperatureSeries[i];
             }
         }
         
         return tempClosestToVal;
-}
+    }
+    
+    private double[] findTempsLessOrGreaterThen(double tempValue,
+                                                boolean searchGreater) {
+        if (temperatureSeriesArraySize == 0) {
+            throw new IllegalArgumentException();
+        }
+        
+        int foundTempsNumber      = 0;
+        double[] tempsLessThenVal = new double[temperatureSeriesArraySize];
+        
+        for (int i = 0; i < temperatureSeriesArraySize; i++) {
+            if (((temperatureSeries[i] < tempValue) != searchGreater)
+                && (Double.compare(temperatureSeries[i], tempValue) != 0)) {
+                tempsLessThenVal[foundTempsNumber++] = temperatureSeries[i];
+            }
+        }
+        
+        if (foundTempsNumber == 0) {
+            return new double[0];
+        }
+        
+        double[] result = new double[foundTempsNumber];
+        for (int i = 0; i < foundTempsNumber; i++) {
+            result[i] = tempsLessThenVal[i];
+        }
+        
+        return result;
+    }
     
     public double[] findTempsLessThen(double tempValue) {
+        //if temperatureSeries is empty then
+        //findTempsLessOrGreaterThen() will throw IllegalArgumentException;
+        return findTempsLessOrGreaterThen(tempValue, false);
+        /*
         if (temperatureSeriesArraySize == 0) {
             throw new IllegalArgumentException();
         }
@@ -148,9 +181,14 @@ public class TemperatureSeriesAnalysis {
         }
         
         return result;
+        */
     }
     
     public double[] findTempsGreaterThen(double tempValue) {
+        //if temperatureSeries is empty then
+        //findTempsLessOrGreaterThen() will throw IllegalArgumentException;
+        return findTempsLessOrGreaterThen(tempValue, true);
+        /*
         if (temperatureSeriesArraySize == 0) {
             throw new IllegalArgumentException();
         }
@@ -174,6 +212,7 @@ public class TemperatureSeriesAnalysis {
         }
         
         return result;
+        */
     }
     
     public TempSummaryStatistics summaryStatistics() {
@@ -208,7 +247,7 @@ public class TemperatureSeriesAnalysis {
         }
 
         for (int i = 0; i < temps.length; i++) {
-            if (temps[i] < AbsoluteMinimumTemperature) {
+            if (temps[i] < ABSOLUTE_MINIMUM_TEMP) {
                 throw new InputMismatchException();
             }
             newTempSeries[temperatureSeriesArraySize + i] = temps[i];

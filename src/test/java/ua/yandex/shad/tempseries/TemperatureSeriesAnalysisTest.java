@@ -754,9 +754,9 @@ public class TemperatureSeriesAnalysisTest {
     public void testAddTempsWhenExistsAbsoluteMinimumTemp() {
         double[] temperatureSeries = {-274.0, -10.0, 0.0, 3.2, 15.5};
         TemperatureSeriesAnalysis seriesAnalysis =
-                              new TemperatureSeriesAnalysis(temperatureSeries);
+                              new TemperatureSeriesAnalysis();
         
-        seriesAnalysis.addTemps(new double[30]);
+        seriesAnalysis.addTemps(temperatureSeries);
     }
     
     @Test
